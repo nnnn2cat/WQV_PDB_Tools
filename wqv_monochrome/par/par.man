@@ -1,0 +1,410 @@
+.TH PAR 1 "November 1999" "Version 0.5 (beta)" "Palm hacking commands"
+.SH NAME
+par \- Palm database archiver, version 0.5.
+.SH SYNOPSIS
+.B par t
+.I dbfile
+.PP
+.B par h
+.I dbfile
+.PP
+.B par x
+.I dbfile
+.BI [ ioptions ]
+.BI [ records.. ]
+.PP
+.B par\ c
+.BI [ hoptions ]
+.I dbfile\ name\ type\ cid
+.BI [ ioptions ]
+.BI [ files.. ]
+.PP
+.B par u
+.BI [ hoptions ]
+.I dbfile
+.BI [ ioptions ]
+.BI [ updates.. ]
+.PP
+.B par a
+.BI [ hoptions ]
+.I dbfile
+.BI [ ioptions ]
+.BI [ files.. ]
+.PP
+.B par d
+.BI [ hoptions ]
+.I dbfile
+.BI [ doptions ]
+.BI [ records.. ]
+.PP
+.B par V
+.SH DESCRIPTION
+The
+.B par
+utility creates and manipulates PalmOS database
+.B (.pdb)
+and resource
+.B (.prc)
+files. The first argument determines the mode of operation, as follows:
+.TP
+.B t
+List contents. For regular databases a list of records is generated,
+each line showing the record attributes, category, record size, and
+an ascii dump of the first few bytes of the record. For resource databases,
+a list of resources is generated, each line showing resource type, hex id,
+size, and ascii dump of the first few bytes of the resource.
+.TP
+.B h
+List header information. A report of the database header is generated,
+showing the database name (this is the name that would be visible on
+a device), the database type, creator id, attributes, version, creation
+time, last modification time, last backup time, mod number, nrecords
+(or resources), and the size of the application info block in the database.
+.TP
+.B x
+Extract. The extract mode can extract all or just specific records from a
+database. With no further arguments, all records will be extracted from
+the database. If further arguments are provided, these should specify the
+.I index
+of the record to extract for regular databases, and the
+.I type
+and
+.I id
+of the desired resource for resource databases. By default,
+individual records will be saved as files with the name
+.IR <index>.pdr ,
+where
+.I <index>
+is the index of the record in the database, individual resources
+will be saved as files with the name
+.IR <type><id>.bin ,
+where
+.I <type>
+is the 4 character type of the resource, and
+<id>
+is the resource id in 4 digit hexadecimal. A preferred
+.I filename
+for a saved item can be specified for each record using the
+.B -f
+option to the record or resource specification.
+.TP
+.B c
+Create a new database. The create mode creates a new database file, with
+the database
+.IR name ,
+.IR type ,
+and
+.I creator id
+specified as (required) arguments. If no further arguments are specified,
+the resulting database will contain no records, but will have a valid
+database header. If further arguments are specified, they should
+specify files to be appended to the database as records or resources (see
+the
+.B -a
+mode description).
+.TP
+.B u
+Touch the header or record attributes. In touch mode, changes to the database
+header can be specified. By default, the last modification time will
+be updated to the current time, but further changes can be specified
+using the header options. See
+.B HEADER OPTIONS
+section. In addition, attribute information for particular records can
+be specified. For regular databases, the new record
+.I category
+and
+.I record attributes
+may be specified, using the
+.B -c
+and
+.B -a
+options. The records to touch are specified by
+.IR index .
+For resource databases, the new resource
+.I type
+and
+.I id
+may be specified using the
+.B -T
+option. The resources to touch are specified by
+.I <type>
+and
+.IR <id> .
+.TP
+.B a
+Append records or resources. In append mode, records or resources
+will be added to the database. For regular databases, the target record
+.I category
+and
+.I record attributes
+may be specified, using the
+.B -c
+and
+.B -a
+options before the source filename. For resource databases, the
+target resource
+.I type
+and
+.I id
+may be specified using the
+.B -T
+option before the source filename. If the
+.B -T
+option is not specified, the source filename is assumed to
+specify the
+.I type
+and
+.I id
+in the
+.I <type><index>
+fashion described for the
+.B x
+mode.
+In addition to individual records and resources,
+.B par
+can append whole databases, in effect merging the records or resources
+from one database into another. Databases may be specified as append
+items explicitly using the
+.B -p
+argument option, or implicitly by using a
+.I .pdb
+extension for record databases, and
+.I .prc
+extension for resource databases.
+.TP
+.B d
+Delete. In delete mode, records or resources are removed from
+the database. Records are specified by
+.IR index ,
+resources are specified by
+.I type
+and
+.IR id .
+.TP
+.B V
+Version. Print the version number.
+.TP
+.B r
+Create resource.
+.B r
+is an convenience alias for
+.B c -a
+.BR resource .
+See
+.B HEADER OPTIONS
+section.
+.TP
+.B l
+.B l
+is an alias for
+.BR t .
+.TP
+.B i
+.B i
+is an alias for
+.BR h .
+.TP
+.BI - mode
+All modes may be prefixed with
+.B -
+if that makes you feel better.
+.SH HEADER OPTIONS
+The
+.BR a ,
+.BR c ,
+.BR d ,
+.B u
+modes accept
+.I hoptions
+which update the database information as follows:
+.TP
+.BI \-n\  name\ 
+Database name. This is the name of the database that will be visible
+on the device. Note that this is entirely independent from the
+.IR dbfile ,
+although some utilities will imply the latter from the former.
+.TP
+.BI \-T\  type\ 
+The four character database type. For example, an application
+resource database is of type
+.IR 'appl' .
+The address book database is of type
+.IR 'DATA' .
+.TP
+.BI \-I\  cid\ 
+The four character creator identifier. This specifies which application
+owns the database.
+.TP
+.BI \-a\  attributes\ 
+Database attributes. These may be specified as a hex number, or symbolically
+using the keywords
+.BR  resource ,
+.BR  readonly ,
+.BR  dirty ,
+.BR  backup ,
+.BR  newer ,
+.BR  reset ,
+.BR  copyprevent ,
+.BR  stream ,
+.BR  hidden ,
+.BR  launchable ,
+.BR  recyclable ,
+.BR  bundle ,
+or any bit-ORed combination of names or hex numbers. For new databases,
+the attributes default to 0x0 (none set).
+.TP
+.BI \-v\  version\ 
+The database version. For new databases, this defaults to 1.
+.TP
+.BI \-C\  creation_time\ 
+The time the database was created.
+Times should be specified using the format
+.IR [[CC]YY]MMDDHHMM ,
+or using the special keywords
+.BR now ,
+or
+.BR never .
+The former is the current time, that latter is the
+beginning of PalmOS time (90401010000).
+For new databases, this defaults to
+.BR now .
+.TP
+.BI \-m\  last_modification_time\ 
+The time the database was created. For new databases, this defaults to
+.BR now .
+.TP
+.BI \-b\  last_backup_time\ 
+The time the database was last backed up. For new databases, this defaults to
+.BR never .
+.SH INFO OPTIONS
+The
+.BR x ,
+.BR c ,
+.BR u ,
+and
+.B a
+modes accept
+.IR ioptions ,
+and the
+.B d
+mode accepts
+.IR doptions ,
+which operate on the app and sort info in the database:
+.TP
+.TP
+.BI \-A\  filename\ 
+AppInfo filename. In
+.BR x
+mode, specifies that the database AppInfo should be saved to
+.I filename.
+In
+.BR c , u ,
+and
+.B a
+modes, specifies that the database AppInfo should be set from
+.I filename.
+.TP
+.BI \-S\  filename\ 
+SortInfo filename. In
+.BR x
+mode, specifies that the database SortInfo should be saved to
+.I filename.
+In
+.BR c , u ,
+and
+.B a
+modes, specifies that the database SortInfo should be set from
+.I filename.
+.TP
+.B \-A
+Delete AppInfo. In
+.B d
+mode, specifies that the database AppInfo should be deleted from the
+database.
+.TP
+.B \-S
+Delete SortInfo. In
+.B d
+mode, specifies that the database SortInfo should be deleted from the
+database.
+.SH EXAMPLES
+The following example prints the header information for the database 'foo.pdb'.
+.PP
+.B par h foo.pdb
+.PP
+The following extracts all records from 'foo.pdb'.
+.PP
+.B par x foo.pdb
+.PP
+The following extracts the application icon resource from 'app.prc' and saves
+it in the file 'icon.Tbmp'. Note the use of decimal specification for the
+resource id. The id may be specified in hex using by using the '0x' prefix.
+.PP
+.B par x app.prc -f icon.Tbmp tAIB 1000
+.PP
+The following creates a new application resource database from all the
+the files with a '.bin' extension in the current directory. The database
+will have creator id of 'djwP' and will have the backup bit set.
+.PP
+.B par c -a \&"resource|backup\&" app.prc myapp appl djwP *.bin
+.PP
+If you use the author's technique for creating multi-segment library
+prcs with CodeWarrior, the following example will be useful. This
+example uses the touch mode to change the database type to 'libr', and
+to change the attribute type of the primary code resource from
+type = 'code', id = '1' (as used in an application) to type = 'libr',
+ id = '0' (as used in a library).
+.PP
+.B par u -T libr mylib.prc -T libr 0 code 1
+.PP
+The following example merges the resources from two different
+resource databases,
+.IR code.prc ,
+and
+.I resource.prc
+into a single target application database,
+.IR myapp.prc .
+This technique is useful for managing code and non-code elements
+of an application, using the individual resource databases as
+libraries.
+.PP
+.B par r myapp.prc myapp appl djwP code.prc resource.prc
+.PP
+By default,
+.B par
+saves extracted resources using the form
+.IR <type><id>.bin ,
+where
+.I <type>
+is the 4 character type of the resource, and
+<id>
+is the resource id in 4 digit hexadecimal. When appending resources
+to a new or existing resource database,
+.B par
+will attempt to decode the resource and id of the resource being appended
+from the resource filename using this same naming scheme, or you can
+explicitly specify the resource and id using the
+.I -T
+syntax. Here are two invocations of
+.B par
+that do exactly the same thing: create a new resource database with one
+resource which has type = NFNT and id = 256 (0x0100 hexadecimal):
+.PP
+.B par c -a \&"resource\&" font.prc Font FONT djwF NFNT0100.bin
+.P
+.B par r font.prc Font FONT djwF -T NFNT 256 myfont
+.PP
+The following example creates a stream database that can be accessed using
+the PalmOS FileStream API. The stream will contain the contents of the
+file 'WarAndPeace.txt':
+.PP
+.B par c -a \&"stream\&" book.pdb Book DATA djwS WarAndPeace.txt
+.PP
+In the following example, 'book.pdb' is a stream database. This
+example extracts the stream from that database and stores the result
+in the output file 'Book.txt':
+.PP
+.B par x book.pdb Book.txt
+.SH AUTHOR
+.B par
+was written by David Williams, djw@djw.org
