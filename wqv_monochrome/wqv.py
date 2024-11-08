@@ -5,6 +5,7 @@ from PIL import ImageTk, Image, ImageOps
 import os
 import time
 import datetime
+import sys
 
 path = "work//"
 dir_list = os.listdir(path)
@@ -14,7 +15,8 @@ dir_list = os.listdir(path)
 idx = 0
 for fn in dir_list:
     filename_full = path + fn
-    if ".pdb" in filename_full :
+    if ".pdr" in filename_full :
+        sys.stdout.write("Converting: " + fn + "\n")
         with open(filename_full, "rb") as f:
             xs = bytearray()
             idx += 1
