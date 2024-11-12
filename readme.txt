@@ -1,5 +1,5 @@
 *************************
-   WQV PDB Tools 0.1
+   WQV PDB Tools 0.2
         By NNNN 
 (nana.must.die@gmail.com)
 *************************
@@ -56,6 +56,11 @@ with an earlier OS version may help.
 1.2 VERSION HISTORY
 ==========================
 2024.10.17: Version 0.1 Initial release.
+2024.11.12: Version 0.2:
+	・Error checking (skips unnecessary files)
+	・Updated readme (instructions to install PIL)
+	・More verbose output
+	・Cleans up work folder before execution
 
 ==========================
 2.1 USAGE wqv_monochrome (WQV-1, WQV-2)
@@ -66,25 +71,30 @@ with an earlier OS version may help.
    This program was tested with Python 3.11, but 
    later versions should also work fine.
 
-3. Transfer images from your watch to your PDA
+3. Install PIL (Python Image Library) if you don't
+   have it already. You can do this by opening cmd
+   and typing:
+	pip install Pillow
+
+4. Transfer images from your watch to your PDA
    using WQV Link for Palm OS Handhelds Ver. 1.1.
 
-4. Hotsync your PDA to your computer. 
+5. Hotsync your PDA to your computer. 
    This should generate a backup of your WQV Link data.
 
-5. Navigate to your WQV Link Backup data in your Hotsync folder.
+6. Navigate to your WQV Link Backup data in your Hotsync folder.
    In my case, this is:
    Documents/Palm OS Desktop/[username]/Backup/WQVLinkDB.PDB
 
-6. Copy WQVLinkDB.PDB to the 'pdb' folder of this tool.
+7. Copy WQVLinkDB.PDB to the 'pdb' folder of this tool.
 
-7. Run convert.bat.
+8. Run convert.bat.
 
-8. If everything succeeded, you should now have extracted bitmaps
+9. If everything succeeded, you should now have extracted bitmaps
    in the 'out' folder. Note that these will be overwritten upon further
    executions of the program, so please copy them somewhere for safekeeping.
 
-9. Enjoy your new photos.
+10. Enjoy your new photos.
 
 
 ==========================
@@ -96,32 +106,37 @@ with an earlier OS version may help.
    This program was tested with Python 3.11, but 
    later versions should also work fine.
 
-3. Transfer images from your watch to your PDA using 
+3. Install PIL (Python Image Library) if you don't
+   have it already. You can do this by opening cmd
+   and typing:
+	pip install Pillow
+
+4. Transfer images from your watch to your PDA using 
    CASIO WQV Color for Palm OS(R) Handhelds Version 2.2.
 
-4. Inside CASIO WQV Color for Palm, enable backing up of
+5. Inside CASIO WQV Color for Palm, enable backing up of
    image data during Hotsync via Options > Preferences.
    This should be enabled by default.
 
-5. Hotsync your PDA to your computer. This should 
+6. Hotsync your PDA to your computer. This should 
    generate a backup of your WQV Color data.
 
-6. Navigate to your WQV Color Backup data in your Hotsync folder.
+7. Navigate to your WQV Color Backup data in your Hotsync folder.
    There should be several individual PDB files named something like:
    CASIJPG00E6F00A.PDB
    CASIJPG00E6F01C.PDB
    CASIJPG00E6F01F.PDB
    etc.
 
-7. Copy all CASIJPG[...].PDB files to the 'pdb' folder of this tool.
+8. Copy all CASIJPG[...].PDB files to the 'pdb' folder of this tool.
 
-8. Run convert.bat.
+9. Run convert.bat.
 
-9. If everything succeeded, you should now have extracted jpegs
+10. If everything succeeded, you should now have extracted jpegs
    in the 'out' folder. Note that these will be overwritten upon further
    executions of the program, so please copy them somewhere for safekeeping.
 
-9. Enjoy your new photos.
+11. Enjoy your new photos.
 
 
 ==========================
