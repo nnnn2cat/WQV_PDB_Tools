@@ -13,10 +13,12 @@ dir_list = os.listdir(path)
 
 #iterate through all files in work dir
 idx = 0
+success_count = 0
+
 for fn in dir_list:
     filename_full = path + fn
     if ".pdr" in filename_full :
-        sys.stdout.write("Converting: " + fn + "\n")
+        sys.stdout.write("Converting: " + fn)
         with open(filename_full, "rb") as f:
             xs = bytearray()
             idx += 1
@@ -43,6 +45,16 @@ for fn in dir_list:
                                             
 
             #output result
-            img = Image.frombytes("L", (120, 120), xs)
-            img_invert = ImageOps.invert(img)
-            img_invert.save("out/" + str(idx) + ".png")
+            try:
+                img = Image.frombytes("L", (120, 120), xs)
+                img_invert = ImageOps.invert(img)
+                img_invert.save("out/" + str(idx) + ".png")
+                sys.stdout.write(" OK!" )
+                success_count += 1
+            except:
+                sys.stdout.write(" failed!" )
+
+            sys.stdout.write("\n")
+
+sys.stdout.write("Finished!\n")
+sys.stdout.write("Converted " + str(success_count) + " images successfully.")
